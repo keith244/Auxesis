@@ -1,0 +1,1 @@
+default_app_config = 'user.apps.YourAppNameConfig'  # Replace with your actual app name
