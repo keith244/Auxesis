@@ -1,57 +1,6 @@
+{% extends 'layout/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auxesis - Harvest Family Church</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="shortcut icon" href="{% static 'images/logo.png' %}" type="image/x-icon">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
-</head>
-<body class="bg-gray-50">
-    <!-- Navigation -->
-    <nav class="bg-indigo-700 text-white shadow-lg" style="margin-top: 5px;">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <img src="{% static 'images/logo.png' %}" style="height: 50px;width: 200px;" alt="">
-                        <span class="text-xl font-bold">Auxesis</span>
-                    </div>
-                    <div class="hidden md:block">
-                        <div class="ml-10 flex items-baseline space-x-4">
-                            <a href="#" class="bg-indigo-800 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
-                            <a href="#" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600">Squads</a>
-                            <a href="#" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600">Nations</a>
-                            <a href="#" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600">Reports</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="hidden md:block">
-                    <div class="ml-4 flex items-center md:ml-6">
-                        <button class="p-1 rounded-full hover:bg-indigo-600 focus:outline-none">
-                            <i class="fas fa-bell text-white"></i>
-                        </button>
-                        <div class="ml-3 relative">
-                            <div>
-                                <button class="max-w-xs bg-indigo-600 rounded-full flex items-center text-sm focus:outline-none p-2">
-                                    <span>John Shepherd</span>
-                                </button>
-                                <a href="{% url 'logout' %}">Logout</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="-mr-2 flex md:hidden">
-                    <button class="inline-flex items-center justify-center p-2 rounded-md text-indigo-200 hover:text-white hover:bg-indigo-600 focus:outline-none">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
+{% block content %}
 
     <!-- Main Content -->
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
@@ -185,7 +134,7 @@
                         <h3 class="text-lg leading-6 font-medium text-gray-900">Recent Squad Meetings</h3>
                         <p class="mt-1 max-w-2xl text-sm text-gray-500">Latest updates from your squads</p>
                     </div>
-                    <a href="{% url 'squad-meeting' %}" class="bg-indigo-600 px-4 py-2 rounded-md text-white text-sm hover:bg-indigo-700">
+                    <a href="{% url 'squad-report' %}" class="bg-indigo-600 px-4 py-2 rounded-md text-white text-sm hover:bg-indigo-700">
                         Add New Meeting
                     </a>
                 </div>
@@ -319,56 +268,4 @@
             </div>
         </div>
     </div>
-
-    <script>
-        // Attendance Chart
-        var attendanceCtx = document.getElementById('attendanceChart').getContext('2d');
-        var attendanceChart = new Chart(attendanceCtx, {
-            type: 'line',
-            data: {
-                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'],
-                datasets: [{
-                    label: 'Attendance',
-                    data: [6, 8, 7, 10, 12, 15],
-                    backgroundColor: 'rgba(79, 70, 229, 0.2)',
-                    borderColor: 'rgba(79, 70, 229, 1)',
-                    borderWidth: 2,
-                    tension: 0.3
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-
-        // Squad Comparison Chart
-        var squadCtx = document.getElementById('squadChart').getContext('2d');
-        var squadChart = new Chart(squadCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Eagles', 'Lions', 'Victors', 'Champions'],
-                datasets: [{
-                    label: 'This Week',
-                    data: [8, 6, 12, 7],
-                    backgroundColor: 'rgba(79, 70, 229, 0.7)',
-                }, {
-                    label: 'Last Week',
-                    data: [6, 5, 10, 8],
-                    backgroundColor: 'rgba(79, 70, 229, 0.3)',
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    </script>
-</body>
-</html>
+{% endblock %}

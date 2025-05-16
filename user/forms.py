@@ -3,8 +3,10 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Profile
 import re
+from squad.models import Squad
 
 class UserRegistrationForm(UserCreationForm):
+    squad = forms.ModelChoiceField(queryset=Squad.objects.all(),required=False)
     role = forms.ChoiceField(choices = Profile.ROLE_CHOICES)
     phone = forms.RegexField(
         regex=r'^\+?\(?\d{1,4}\)?[\s\-]?\(?\d{1,4}\)?[\s\-]?\d{1,4}[\s\-]?\d{1,4}$',
@@ -15,7 +17,7 @@ class UserRegistrationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email','phone', 'password1', 'password2', 'role')
+        fields = ('username', 'email','phone', 'password1', 'password2', 'role', 'squad')
     
     def save (self, commit=True):
         user = super().save(commit=False)
