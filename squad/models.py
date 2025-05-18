@@ -1,5 +1,6 @@
 from django.db import models
 from tinymce.models import HTMLField
+import re
 from django.contrib.auth.models import User
 # Create your models here.
 class Nation(models.Model):
@@ -30,9 +31,18 @@ class SquadReport(models.Model):
     testimonies = models.TextField(blank=True)
     offering = models.IntegerField()
 
-    def __str__(self):
-        
+    def __str__(self):  
         return f'{self.squad.name} Squad report for {self.date}'
+
+    def get_attendee_count(self):
+        attendees_list = [name.strip() for name in re.split(r'[,\n]',self.attendees) if name.strip()]
+        return len(attendees_list)
+    
+    def get_visitor_count (self):
+        if not self.visitors:
+            return 0
+        visitors_list = [name.strip() for name in re.split(r'[,\n]', self.visitors) if name.strip()]
+        return len(visitors_list)
 
     class Meta:
         ordering = ['-date']

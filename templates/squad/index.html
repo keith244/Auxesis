@@ -140,15 +140,16 @@
                 </div>
                 <div class="border-t border-gray-200">
                     <ul class="divide-y divide-gray-200">
+                        {% for report in squad_meeting %}
                         <li>
                             <div class="px-4 py-4 sm:px-6">
                                 <div class="flex items-center justify-between">
                                     <div class="text-sm font-medium text-indigo-600 truncate">
-                                        Eagles Squad - Thursday Meeting
+                                        {{report.squad.name}} Squad - Meeting Report
                                     </div>
                                     <div class="ml-2 flex-shrink-0 flex">
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                            8 Attendees
+                                            {{ report.get_attendee_count }} Attendees
                                         </span>
                                     </div>
                                 </div>
@@ -156,29 +157,51 @@
                                     <div class="sm:flex">
                                         <p class="flex items-center text-sm text-gray-500">
                                             <i class="fas fa-user-friends flex-shrink-0 mr-1.5 text-gray-400"></i>
-                                            John Smith (Shepherd)
+                                            <strong>
+                                                {{ report.squad.shepherd|capfirst }}
+                                            </strong> 
+                                            (Shepherd)
                                         </p>
+                                        {% if report.visitors %}
                                         <p class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
                                             <i class="fas fa-user-plus flex-shrink-0 mr-1.5 text-gray-400"></i>
-                                            2 Newcomers
+                                            {{ report.visitors|linebreaksbr|truncatewords:1}} Newcomers
                                         </p>
+                                        {% endif %}
                                     </div>
                                     <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
                                         <i class="fas fa-calendar flex-shrink-0 mr-1.5 text-gray-400"></i>
                                         <p>
-                                            May 8, 2025
+                                            {{ report.uploaded_at|date:"F j, Y"}}
                                         </p>
                                     </div>
                                 </div>
                                 <div class="mt-2">
-                                    <p class="text-sm text-gray-500">Highlights: Great discussion on community outreach...</p>
+                                    <p class="text-sm text-gray-500">Highlights: {{report.highlights|truncatechars:100}}</p>
                                 </div>
                                 <div class="mt-2 flex">
-                                    <img src="{% static 'images/download.jpeg' %}" alt="Meeting photo" class="h-12 w-20 object-cover rounded mr-2">
-                                    <img src="{% static 'images/fun night.jpeg' %}" alt="Meeting photo" class="h-12 w-20 object-cover rounded">
+                                    {% for photo in report.photos.all %}
+                                    <img src="{{photo.images.url}}" alt="Meeting photo" class="h-12 w-20 object-cover rounded mr-2">
+                                    {% empty %}
+                                    <p class="text-sm text-gray-400">No photos uploaded</p>
+                                    {% endfor %}
                                 </div>
+                                {% if report.testimonies %}
+                                <div class="mt-2">
+                                    <p class="text-sm text-gray-500">Testimonies: {{report.testimonies|truncatechars:100}}</p>
+                                </div>
+                                {% endif %}
+                                <div class="mt-2">
+                                    <p class="text-sm text-gray-500">Offering: {{report.offering|truncatechars:100}}</p>
+                                </div>
+                                
                             </div>
                         </li>
+                        {% empty %}
+                        <li class="px-4 py-5 text-center">
+                            <p class="text-sm text-gray-500">No squad meetings reported yet.</p>
+                        </li>
+                        {% endfor %}
                         <li>
                             <div class="px-4 py-4 sm:px-6">
                                 <div class="flex items-center justify-between">
@@ -219,11 +242,13 @@
                         </li>
                     </ul>
                 </div>
+                {% if squad_meeting %}
                 <div class="bg-gray-50 px-4 py-4 sm:px-6 text-center">
                     <button class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
                         View All Squad Meetings <i class="fas fa-arrow-right ml-1"></i>
                     </button>
                 </div>
+                {% endif %}
             </div>
         </div>
 

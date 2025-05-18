@@ -2,10 +2,17 @@ from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from . forms import SquadReportForm
 from django.contrib import messages
+from django.contrib.auth import get_user_model
+from user.models import User
 from . models import Squad,SquadReport,SquadReportPhoto
 # Create your views here.
+User = get_user_model()
+
 def index(request):
-    return render(request, 'squad/index.html')
+    # squad_meeting = get_object_or_404(SquadReportForm,SquadReportPhoto, user)
+    squad_meeting = SquadReport.objects.all().order_by('-date')#[:3]
+    squad_photo = SquadReportPhoto.objects.all().order_by('-uploaded_at')
+    return render(request, 'squad/index.html',{'squad_meeting':squad_meeting})
 
 @login_required(login_url='login')
 def squad_report(request):
