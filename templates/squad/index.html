@@ -1,64 +1,13 @@
+{% extends 'layout/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auxesis - Harvest Family Church</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="shortcut icon" href="{% static 'images/logo.png' %}" type="image/x-icon">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
-</head>
-<body class="bg-gray-50">
-    <!-- Navigation -->
-    <nav class="bg-indigo-700 text-white shadow-lg" style="margin-top: 5px;">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <img src="{% static 'images/logo.png' %}" style="height: 50px;width: 200px;" alt="">
-                        <span class="text-xl font-bold">Auxesis</span>
-                    </div>
-                    <div class="hidden md:block">
-                        <div class="ml-10 flex items-baseline space-x-4">
-                            <a href="#" class="bg-indigo-800 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
-                            <a href="#" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600">Squads</a>
-                            <a href="#" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600">Nations</a>
-                            <a href="#" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600">Reports</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="hidden md:block">
-                    <div class="ml-4 flex items-center md:ml-6">
-                        <button class="p-1 rounded-full hover:bg-indigo-600 focus:outline-none">
-                            <i class="fas fa-bell text-white"></i>
-                        </button>
-                        <div class="ml-3 relative">
-                            <div>
-                                <button class="max-w-xs bg-indigo-600 rounded-full flex items-center text-sm focus:outline-none p-2">
-                                    <span>John Shepherd</span>
-                                </button>
-                                <a href="{% url 'logout' %}">Logout</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="-mr-2 flex md:hidden">
-                    <button class="inline-flex items-center justify-center p-2 rounded-md text-indigo-200 hover:text-white hover:bg-indigo-600 focus:outline-none">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
+{% block content %}
 
     <!-- Main Content -->
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <!-- Page header -->
         <div class="px-4 py-4 sm:px-0">
             <h1 class="text-2xl font-semibold text-gray-900">Dashboard</h1>
-            <p class="mt-2 text-sm text-gray-600">Welcome to Auxesis - Track your squad growth</p>
+            <p class="mt-2 text-sm text-gray-600">Welcome to Auxesis - Track your Harvest Group growth</p>
         </div>
 
         <!-- Quick Stats -->
@@ -169,7 +118,7 @@
 
             <div class="bg-white overflow-hidden shadow rounded-lg">
                 <div class="px-4 py-5 sm:p-6">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">Squad Comparison</h3>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Harvest Group Comparison</h3>
                     <div class="mt-2">
                         <canvas id="squadChart" height="300"></canvas>
                     </div>
@@ -182,24 +131,25 @@
             <div class="bg-white shadow rounded-lg">
                 <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
                     <div>
-                        <h3 class="text-lg leading-6 font-medium text-gray-900">Recent Squad Meetings</h3>
-                        <p class="mt-1 max-w-2xl text-sm text-gray-500">Latest updates from your squads</p>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Recent Harvest Group Meetings</h3>
+                        <p class="mt-1 max-w-2xl text-sm text-gray-500">Latest updates from your Harvest Groups</p>
                     </div>
-                    <a href="{% url 'squad-meeting' %}" class="bg-indigo-600 px-4 py-2 rounded-md text-white text-sm hover:bg-indigo-700">
+                    <a href="{% url 'harvest-group-report' %}" class="bg-indigo-600 px-4 py-2 rounded-md text-white text-sm hover:bg-indigo-700">
                         Add New Meeting
                     </a>
                 </div>
                 <div class="border-t border-gray-200">
                     <ul class="divide-y divide-gray-200">
+                        {% for report in harvest_group_meeting %}
                         <li>
                             <div class="px-4 py-4 sm:px-6">
                                 <div class="flex items-center justify-between">
                                     <div class="text-sm font-medium text-indigo-600 truncate">
-                                        Eagles Squad - Thursday Meeting
+                                        {{report.harvestgroup.name}} Harvest Group - Meeting Report
                                     </div>
                                     <div class="ml-2 flex-shrink-0 flex">
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                            8 Attendees
+                                            {{ report.get_attendee_count }} Attendees
                                         </span>
                                     </div>
                                 </div>
@@ -207,34 +157,56 @@
                                     <div class="sm:flex">
                                         <p class="flex items-center text-sm text-gray-500">
                                             <i class="fas fa-user-friends flex-shrink-0 mr-1.5 text-gray-400"></i>
-                                            John Smith (Shepherd)
+                                            <strong>
+                                                {{ report.harvestgroup.shepherd.user.get_full_name|default:report.harvestgroup.shepherd.user.username }}
+                                            </strong> 
+                                            (Shepherd)
                                         </p>
+                                        {% if report.visitors %}
                                         <p class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
                                             <i class="fas fa-user-plus flex-shrink-0 mr-1.5 text-gray-400"></i>
-                                            2 Newcomers
+                                            {{ report.get_visitor_count}} Newcomers
                                         </p>
+                                        {% endif %}
                                     </div>
                                     <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
                                         <i class="fas fa-calendar flex-shrink-0 mr-1.5 text-gray-400"></i>
                                         <p>
-                                            May 8, 2025
+                                            {{ report.date|date:"F j, Y"}}
                                         </p>
                                     </div>
                                 </div>
                                 <div class="mt-2">
-                                    <p class="text-sm text-gray-500">Highlights: Great discussion on community outreach...</p>
+                                    <p class="text-sm text-gray-500">Highlights: {{report.highlights|truncatechars:100}}</p>
                                 </div>
                                 <div class="mt-2 flex">
-                                    <img src="{% static 'images/download.jpeg' %}" alt="Meeting photo" class="h-12 w-20 object-cover rounded mr-2">
-                                    <img src="{% static 'images/fun night.jpeg' %}" alt="Meeting photo" class="h-12 w-20 object-cover rounded">
+                                    {% for photo in report.photos.all %}
+                                    <img src="{{photo.images.url}}" alt="Meeting photo" class="h-12 w-20 object-cover rounded mr-2">
+                                    {% empty %}
+                                    <p class="text-sm text-gray-400">No photos uploaded</p>
+                                    {% endfor %}
                                 </div>
+                                {% if report.testimonies %}
+                                <div class="mt-2">
+                                    <p class="text-sm text-gray-500">Testimonies: {{report.testimonies|truncatechars:100}}</p>
+                                </div>
+                                {% endif %}
+                                <div class="mt-2">
+                                    <p class="text-sm text-gray-500">Offering: {{report.offering}}</p>
+                                </div>
+                                
                             </div>
                         </li>
+                        {% empty %}
+                        <li class="px-4 py-5 text-center">
+                            <p class="text-sm text-gray-500">No harvest groups meetings reported yet.</p>
+                        </li>
+                        {% endfor %}
                         <li>
                             <div class="px-4 py-4 sm:px-6">
                                 <div class="flex items-center justify-between">
                                     <div class="text-sm font-medium text-indigo-600 truncate">
-                                        Victors Squad - Thursday Meeting
+                                        Victors Harvest Group - Thursday Meeting
                                     </div>
                                     <div class="ml-2 flex-shrink-0 flex">
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
@@ -270,11 +242,13 @@
                         </li>
                     </ul>
                 </div>
+                {% if harvest_group_meeting %}
                 <div class="bg-gray-50 px-4 py-4 sm:px-6 text-center">
                     <button class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
-                        View All Squad Meetings <i class="fas fa-arrow-right ml-1"></i>
+                        View All Harvest Group Meetings <i class="fas fa-arrow-right ml-1"></i>
                     </button>
                 </div>
+                {% endif %}
             </div>
         </div>
 
@@ -319,56 +293,4 @@
             </div>
         </div>
     </div>
-
-    <script>
-        // Attendance Chart
-        var attendanceCtx = document.getElementById('attendanceChart').getContext('2d');
-        var attendanceChart = new Chart(attendanceCtx, {
-            type: 'line',
-            data: {
-                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'],
-                datasets: [{
-                    label: 'Attendance',
-                    data: [6, 8, 7, 10, 12, 15],
-                    backgroundColor: 'rgba(79, 70, 229, 0.2)',
-                    borderColor: 'rgba(79, 70, 229, 1)',
-                    borderWidth: 2,
-                    tension: 0.3
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-
-        // Squad Comparison Chart
-        var squadCtx = document.getElementById('squadChart').getContext('2d');
-        var squadChart = new Chart(squadCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Eagles', 'Lions', 'Victors', 'Champions'],
-                datasets: [{
-                    label: 'This Week',
-                    data: [8, 6, 12, 7],
-                    backgroundColor: 'rgba(79, 70, 229, 0.7)',
-                }, {
-                    label: 'Last Week',
-                    data: [6, 5, 10, 8],
-                    backgroundColor: 'rgba(79, 70, 229, 0.3)',
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    </script>
-</body>
-</html>
+{% endblock %}
