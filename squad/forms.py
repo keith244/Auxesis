@@ -1,7 +1,7 @@
 from django import forms
-from .models import SquadReport
+from .models import HarvestGroupReport
 
-class SquadReportForm(forms.ModelForm):
+class HarvestGroupReportForm(forms.ModelForm):
     # Add this field for handling multiple photos
     # photos = forms.FileField(
     #     widget=forms.FileInput(attrs={'multiple': True}),
@@ -9,7 +9,7 @@ class SquadReportForm(forms.ModelForm):
     # )
     
     class Meta:
-        model = SquadReport
+        model = HarvestGroupReport
         fields = ['attendees', 'visitors', 'highlights', 'testimonies', 'offering', 'date']
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),

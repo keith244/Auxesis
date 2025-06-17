@@ -3,10 +3,10 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Profile
 import re
-from squad.models import Squad
+from squad.models import HarvestGroup
 
 class UserRegistrationForm(UserCreationForm):
-    squad = forms.ModelChoiceField(queryset=Squad.objects.all(),required=False)
+    squad = forms.ModelChoiceField(queryset=HarvestGroup.objects.all(),required=False)
     role = forms.ChoiceField(choices = Profile.ROLE_CHOICES)
     phone = forms.RegexField(
         regex=r'^\+?\(?\d{1,4}\)?[\s\-]?\(?\d{1,4}\)?[\s\-]?\d{1,4}[\s\-]?\d{1,4}$',
@@ -27,10 +27,20 @@ class UserRegistrationForm(UserCreationForm):
                 profile = user.profile
             except Profile.DoesNotExist:
                 profile = Profile(user=user)
-            profile.role = self.cleaned_data.get('role')
-            profile.phone = self.cleaned_data.get('phone')
+            profile.role = self.cleaned_data.get('role') # type: ignore
+            profile.phone = self.cleaned_data.get('phone') # type: ignore
             profile.save()
         return user
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        role = cleaned_data.get('role')
+        squad = cleaned_data.get('squad')
+        
+        if role == 'SHEPHERD' and not squad:
+            raise forms.ValidationError('Shepherds must be assigned to a squad.')
+        
+        return cleaned_data
 
 class LoginForm (forms.Form):
     username = forms.CharField()
