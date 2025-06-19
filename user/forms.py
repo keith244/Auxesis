@@ -6,8 +6,8 @@ import re
 from squad.models import HarvestGroup
 
 class UserRegistrationForm(UserCreationForm):
-    squad = forms.ModelChoiceField(queryset=HarvestGroup.objects.all(),required=False)
-    role = forms.ChoiceField(choices = Profile.ROLE_CHOICES)
+    # harvest_group = forms.ModelChoiceField(queryset=HarvestGroup.objects.all(),required=False)
+    role = forms.ChoiceField(choices = Profile.ROLE_CHOICES) 
     phone = forms.RegexField(
         regex=r'^\+?\(?\d{1,4}\)?[\s\-]?\(?\d{1,4}\)?[\s\-]?\d{1,4}[\s\-]?\d{1,4}$',
         error_messages={
@@ -17,7 +17,7 @@ class UserRegistrationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email','phone', 'password1', 'password2', 'role', 'squad')
+        fields = ('username', 'email','phone', 'password1', 'password2', 'role', ) #'harvest_group')
     
     def save (self, commit=True):
         user = super().save(commit=False)
@@ -35,10 +35,11 @@ class UserRegistrationForm(UserCreationForm):
     def clean(self):
         cleaned_data = super().clean()
         role = cleaned_data.get('role')
-        squad = cleaned_data.get('squad')
+        # harvest_group = cleaned_data.get('harvest_group')
         
-        if role == 'SHEPHERD' and not squad:
-            raise forms.ValidationError('Shepherds must be assigned to a squad.')
+        if not role:# == 'SHEPHERD' and not harvest_group:
+            # raise forms.ValidationError('Shepherds must be assigned to a Harvest Group.')
+            raise forms.ValidationError('Choose a position.')
         
         return cleaned_data
 
