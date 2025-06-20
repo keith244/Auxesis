@@ -3,13 +3,35 @@ from django.contrib.auth.decorators import login_required
 from .forms import HarvestGroupReportForm
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from .models import HarvestGroup, HarvestGroupReport, HarvestGroupReportPhoto, Community
+from .models import HarvestGroup, HarvestGroupReport, HarvestGroupReportPhoto, Community,MissionalLocation
 # Create your views here.
 User = get_user_model()
 
 
 @login_required(login_url='login')
 def index(request):
+    profile = request.user.profile
+    leads_nothing = (
+        not HarvestGroup.objects.filter(shepherd=profile).exists()
+        and not Community.objects.filter(community_shepherd=profile).exists()
+        and not MissionalLocation.objects.filter(leader=profile).exists()
+    )
+    if leads_nothing:
+        messages.error(request,'You dont have a group to lead.')
+    else:
+        hg = HarvestGroup.objects.filter(shepherd=profile).first()
+        cs = Community.objects.filter(community_shepherd=profile).first()
+        mls = MissionalLocation.objects.filter(leader=profile).first()
+
+        if mls:
+            messages.success(request, f'You lead {mls.name}')
+        elif cs:
+            messages.success(request, f'You lead {cs.name}')
+        elif hg:
+            messages.success(request, f'You lead {hg.name}')
+
+
+
     harvest_group_meeting = HarvestGroupReport.objects.all().order_by('-date')
     harvest_group_photo = HarvestGroupReportPhoto.objects.all().order_by('-uploaded_at')
     return render(request, 'squad/index.html', {'harvest_group_meeting': harvest_group_meeting})
@@ -21,24 +43,38 @@ def harvest_group_report(request):
     try:
         user_harvest_group = HarvestGroup.objects.get(shepherd=request.user.profile)
     except HarvestGroup.DoesNotExist:
-        messages.error(request, 'You must be assigned to a harvest group to submit reports.')
+        messages.error(request, 'You must be assigned to a harvest group to submit reports.')  
         return redirect('index')
     
     if request.method == 'POST':
         form = HarvestGroupReportForm(request.POST, request.FILES)
         if form.is_valid():
-            report = form.save(commit=False)
-            report.harvestgroup = user_harvest_group
-            report.save()
+            data = form.cleaned_data
+            # Try to get or create the report
+            report, created = HarvestGroupReport.objects.get_or_create(
+                harvestgroup=user_harvest_group,
+                date=data['date'],
+                defaults={
+                    'attendees': data['attendees'], 
+                    'visitors': data['visitors'], 
+                    'highlights': data['highlights'], 
+                    'testimonies': data['testimonies'], 
+                    'offering': data['offering']
+                }
+            )
+            if not created:
+                messages.error(request, 'A report for this date already exists.')  
+                return redirect('harvest-group-report')
             
+            # Save photos if created
             files = request.FILES.getlist('photos')
             for f in files:
                 HarvestGroupReportPhoto.objects.create(report=report, images=f)
-            
-            messages.success(request, 'Report sent successfully!')
+
+            messages.success(request, 'Report sent successfully!')  
             return redirect('harvest-group-report')
         else:
-            messages.error(request, 'Form validation failed. Please check the errors below!')
+            messages.error(request, 'Form validation failed. Please check the errors below.')  
     else:
         form = HarvestGroupReportForm()
     

@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from .forms import UserRegistrationForm, LoginForm
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
-from squad.models import HarvestGroup
+from squad.models import HarvestGroup,Community,MissionalLocation
 # Create your views here.
 def ilogin(request):
     form = LoginForm(request.POST or None) 

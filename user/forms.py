@@ -6,7 +6,6 @@ import re
 from squad.models import HarvestGroup
 
 class UserRegistrationForm(UserCreationForm):
-    # harvest_group = forms.ModelChoiceField(queryset=HarvestGroup.objects.all(),required=False)
     role = forms.ChoiceField(choices = Profile.ROLE_CHOICES) 
     phone = forms.RegexField(
         regex=r'^\+?\(?\d{1,4}\)?[\s\-]?\(?\d{1,4}\)?[\s\-]?\d{1,4}[\s\-]?\d{1,4}$',
@@ -17,7 +16,7 @@ class UserRegistrationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email','phone', 'password1', 'password2', 'role', ) #'harvest_group')
+        fields = ('first_name', 'last_name','username', 'email','phone', 'password1', 'password2', 'role', ) 
     
     def save (self, commit=True):
         user = super().save(commit=False)
@@ -35,10 +34,8 @@ class UserRegistrationForm(UserCreationForm):
     def clean(self):
         cleaned_data = super().clean()
         role = cleaned_data.get('role')
-        # harvest_group = cleaned_data.get('harvest_group')
         
-        if not role:# == 'SHEPHERD' and not harvest_group:
-            # raise forms.ValidationError('Shepherds must be assigned to a Harvest Group.')
+        if not role:
             raise forms.ValidationError('Choose a position.')
         
         return cleaned_data
