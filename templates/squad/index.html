@@ -6,10 +6,13 @@
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <!-- Page header -->
         <div class="px-4 py-4 sm:px-0">
-            <h1 class="text-2xl font-semibold text-gray-900">Dashboard</h1>
-            <p class="mt-2 text-sm text-gray-600">Welcome to Auxesis - Track your Harvest Group growth</p>
+            <h1 class="text-2xl font-semibold text-gray-900">Good Afternoon {{user.username.capitalize}}</h1>
+            <p class="mt-2 text-sm text-gray-600">
+            Welcome to 
+            <span class="font-bold hover:underline decoration-indigo-600 cursor-pointer text-gray-800">Auxesis</span> - Track your Harvest Group growth
+            </p>
         </div>
-
+        
         <!-- Quick Stats -->
         <div class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             <div class="bg-white overflow-hidden shadow rounded-lg">
@@ -244,9 +247,9 @@
                 </div>
                 {% if harvest_group_meeting %}
                 <div class="bg-gray-50 px-4 py-4 sm:px-6 text-center">
-                    <button class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                    <a href="{% url 'view_all_reports' %}" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
                         View All Harvest Group Meetings <i class="fas fa-arrow-right ml-1"></i>
-                    </button>
+                    </a>
                 </div>
                 {% endif %}
             </div>

@@ -63,3 +63,23 @@ class HarvestGroupReportPhoto(models.Model):
 
     def __str__(self):
         return f'{self.images} uploaded {self.report.harvestgroup.name.upper()}'
+    
+
+class LeadershipApplication(models.Model):
+    ROLE_CHOICES = [
+        ('hg', 'Harvest Group'),
+        ('community', 'Community'),
+        ('ml', 'Missional Location'),
+    ]
+    applicant = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    role_type = models.CharField(max_length=20, choices=ROLE_CHOICES)
+    target_group_id = models.IntegerField()  # Store the ID of the target group
+    status = models.CharField(max_length=20, choices=[
+        ('pending','Pending'),
+        ('approved','Approved'),
+        ('rejected','Rejected'),
+    ], default='pending')
+    submitted_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.applicant} -> {self.get_role_type_display()} (ID:{self.target_group_id}) [{self.status}]" # type: ignore

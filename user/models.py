@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 class Profile (models.Model):
     ROLE_CHOICES = [
-        ('SHEPHERD','Shepherd'),
+        ('SHEPHERD','Harvest Group Shepherd'),
         ('CS','Community Shepherd'),
         ('MLS','Missional Location Shepherd'),
     ]
