@@ -2,3 +2,4 @@ env/
 config.json
 db.sqlite3
 *.sqlite3
+media/

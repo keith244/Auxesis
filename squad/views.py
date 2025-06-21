@@ -24,11 +24,11 @@ def index(request):
         mls = MissionalLocation.objects.filter(leader=profile).first()
 
         if mls:
-            messages.success(request, f'You lead {mls.name}')
+            messages.success(request, f'You lead {mls.name} Missional Location')
         elif cs:
-            messages.success(request, f'You lead {cs.name}')
+            messages.success(request, f'You lead {cs.name} Community')
         elif hg:
-            messages.success(request, f'You lead {hg.name}')
+            messages.success(request, f'You lead {hg.name} Harvest Group')
 
 
 
@@ -105,3 +105,11 @@ def manage_harvest_groups(request):
         'communities': communities,
         'unassigned_harvest_groups': unassigned_harvest_groups,
     })
+
+
+def view_all_meetings(request):
+    reports = HarvestGroupReport.objects.all().order_by('-date')
+    return render(request,'squad/view_all_reports.html',{'reports':reports})
+
+def leadership_application(request):
+    return render (request, 'squad/leadership_application.html')

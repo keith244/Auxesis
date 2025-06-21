@@ -1,0 +1,29 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+{% block title %}- All Reports{% endblock %}
+{% block content %}
+
+<form method="POST" class="max-w-md mx-auto p-4 space-y-4">
+    {% csrf_token %}
+
+    <div>
+        <label class="block text-sm font-bold">Leadership Role:</label>
+        {{ form.role_type }}
+    </div>
+
+    <div>
+        <label class="block text-sm font-bold">Target Group ID:</label>
+        {{ form.target_group_id }}
+        <p class="text-gray-500 text-sm">{{ form.target_group_id.help_text }}</p>
+    </div>
+
+    <div>
+        <button type="submit" class="bg-indigo-600 text-white rounded px-4 py-2">
+            Submit Application
+        </button>
+    </div>
+</form>
+
+
+
+{% endblock content %}
